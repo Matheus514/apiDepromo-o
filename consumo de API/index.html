@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>promocao</title>
+    <hr>
+    <h4>lista de promocao</h4>
+    <ul id="promocao"></ul>
+    <hr>
+    <h4>Nova Promocao</h4>
+    <input type="text" name="nomeDapromocao" id="nomeDapromocao" placeholder="nomeDapromocao"><br>
+    <input type="text" name="descricaoDapromocao" id="descricaoDapromocao" placeholder="descricaoDapromocao"><br>
+    <input type="number" name="valorDapromocao" id="valorDapromocao" placeholder="valorDapromocao"><br>
+    <button type="button" onclick="createPromocao()">Criar</button>
+
+    
+
+
+</head>
+<body>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+
+        function createPromocao(){
+            var nomeDapromocaoinput = document.getElementById("nomeDapromocao")
+            var descricaoDapromocaoinput = document.getElementById("descricaoDapromocao")
+            var valorDapromocaoinput = document.getElementById("valorDapromocao")
+
+            var promocao = {
+                nomeDapromocao: nomeDapromocaoinput.value,
+                descricaoDapromocao: descricaoDapromocaoinput.value,
+                valorDapromocao: valorDapromocaoinput.value
+            }
+            axios.post("http://localhost:9091/promocao",promocao).then(response => {
+
+                if(response.status == 200){
+                    alert("Promoção cadastrada!")
+                    location.reload();
+                }
+               
+
+            }).catch(err => {
+                console.log(err);
+            });
+
+
+
+
+
+
+
+
+        }
+
+
+        function deletePromocao(listItem){
+          var id = listItem.getAttribute("data-id");
+          axios.delete("http://localhost:9091/promocao/"+id).then(response => {
+              alert("Promoção deletada!")
+              location.reload();
+          }).catch(err => {
+              console.log(err);
+          });
+        }
+    
+    
+    
+        axios.get("http://localhost:9091/promocao").then(response => {
+        var promocao = response.data;
+        var list = document.getElementById("promocao");
+
+        promocao.forEach(promocao => {
+            var item = document.createElement("li");
+                
+
+            item.setAttribute("data-id",promocao.id);
+            item.setAttribute("data-nomeDapromocao",promocao.nomeDapromocao);
+            item.setAttribute("data-descricaoDapromocao",promocao.descricaoDapromocao);
+            item.setAttribute("data-valorDapromocao",promocao.valorDapromocao);
+
+            item.innerHTML = promocao.id + " nome " + promocao.nomeDapromocao + " descrição ="+ promocao.descricaoDapromocao + "Valor da Promoção " + promocao.valorDapromocao;
+            
+            var deleteBtn = document.createElement("button");
+            deleteBtn.innerHTML = "Deletar";
+            deleteBtn.addEventListener("click",function(){
+                deletePromocao(item)
+            }
+
+            )
+
+            item.appendChild(deleteBtn);
+
+            list.appendChild(item);
+        }); 
+    }).catch(error => {
+        console.log(error);
+    });
+
+</script>
+</html>
