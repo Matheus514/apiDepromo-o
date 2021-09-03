@@ -203,7 +203,7 @@ DB.pedido.push({
             var user = promocao.find(u => u.email == email);
             if(user != undefined){
                 if(user.password == password){
-                    jwt.sign({id: user.id, email: user.email},JWTSecret,{expiresIn:'48h'},(err, token) => {
+                    jwt.sign({id: user.id, email: user.email},JWTSecret,{expiresIn:'90h'},(err, token) => {
                         if(err){
                             res.status(400);
                             res.json({err:"Falha interna"});
